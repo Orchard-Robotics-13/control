@@ -8,8 +8,20 @@
  * 
  * */
 
+//  CREATE SUB AND PUB 
+
+
+// USEFUL TOPICS: 
+// /a300_00000/cmd_vel   - publish vel commands - geometry_msg/TWIST_Stamped
+// /a300_00000/platform/cmd_vel  - vel command - puiblished by system SUB to this for closed loop control
+// /a300_00000/platform/emergency_stop - e-stop - imp  - BOOL - 
+
+// /a300_00000/platform/odom - odo subscribe - control node publishes
+// /a300_00000/platform/odom/filtered - EKF filtered platform wheel odo plus IMU fused. 
+// /a300_00000/platform/safety_stop - another ESTOP ??
+
+
 //   ROS 2 TOPIC LIST FOR HUSKY
-// /a300_00000/cmd_vel   - publish vel commands
 // /a300_00000/controller_manager/activity
 // /a300_00000/controller_manager/introspection_data/full
 // /a300_00000/controller_manager/introspection_data/names
@@ -24,12 +36,7 @@
 // /a300_00000/joy_teleop/cmd_vel
 // /a300_00000/joy_teleop/joy
 // /a300_00000/joy_teleop/joy/set_feedback
-// /a300_00000/platform/cmd_vel  - vel command
-// /a300_00000/platform/emergency_stop - e-stop - imp 
 // /a300_00000/platform/joint_states
-// /a300_00000/platform/odom - odo subscribe 
-// /a300_00000/platform/odom/filtered - whats the difference - subscribe to this what is being filtered 
-// /a300_00000/platform/safety_stop - another ESTOP ??
 // /a300_00000/platform_velocity_controller/cmd_vel_out
 // /a300_00000/platform_velocity_controller/transition_event
 // /a300_00000/rc_teleop/cmd_vel
@@ -74,6 +81,7 @@ namespace control
           void reset() ;
           void set_target(double target_x, double target_y) ;
           RobotState compute_command(const RobotState & state) ;
+          void odomCallback( const nav_msgs::msg::Odometry &msg) ; 
           
 
           //  subscriber callbacks:
@@ -81,6 +89,18 @@ namespace control
         private:
           double target_x_{0.0};
           double target_y_{0.0};
+
+          nav_msgs::msg::Odometry odom_ ;                                    //!< Used to store odom data
+          std::mutex odoMtx_bar_;                                            //!< Mutex to protect the odometry data
+ 
+          // PUBS
+        rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr pubCmdVel_;                        ///< Publisher for velocity commands
+        // rclcpp::Publisher<geometry_msgs::msg::PoseArray>::SharedPtr path_pub_;                     ///< Publisher for path poses
+        // rclcpp::Publisher<visualization_msgs::msg::MarkerArray>::SharedPtr markerArray_publisher_; ///< Publisher for visualization markers
+
+          // SUBS
+            rclcpp::Subscription<nav_msgs::msg::Odometry>::SharedPtr odo_sub_; //!< Subscription to the odometry topic
+
         };
 
       }  // namespace husky

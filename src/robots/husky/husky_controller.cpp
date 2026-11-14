@@ -9,6 +9,12 @@ namespace control
       {
         HuskyController::HuskyController()
         {
+          pubCmdVel_ = this->create_publisher<geometry_msgs::msg::Twist>("/a300_00000/cmd_vel", 3);
+
+          odo_sub_ = this->create_subscription<nav_msgs::msg::Odometry>(
+            "a300_00000/platform/odom", 10, std::bind(&HuskyController::odomCallback, this, std::placeholders::_1));
+
+
         }
 
         HuskyController::~HuskyController()
@@ -33,6 +39,12 @@ namespace control
           const double dx = target_x_ - state.x;
           const double dy = target_y_ - state.y;
           return command;
+        }
+
+        void HuskyController::odomCallback(const nav_msgs::msg::Odometry &msg)
+        {
+            std::lock_guard<std::mutex> lock(odoMtx_bar_);
+            odom_ = msg;
         }
 
       }  // namespace husky
