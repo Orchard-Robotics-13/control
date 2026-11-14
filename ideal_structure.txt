@@ -58,5 +58,4 @@ orchard_ws/
     │
     ├── clearpath_config/
     ├── clearpath_simulator/
-    ├── CV/
     └── simulation_gazebo_world/

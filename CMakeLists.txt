@@ -1,17 +1,25 @@
 cmake_minimum_required(VERSION 3.8)
-project(Control)
+project(control)
 
-if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-  add_compile_options(-Wall -Wextra -Wpedantic)
+# Default to C++17
+if(NOT CMAKE_CXX_STANDARD)
+  set(CMAKE_CXX_STANDARD 17)
+  set(CMAKE_CXX_STANDARD_REQUIRED ON)
 endif()
 
+if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+  add_compile_options(-Wall -Wextra -Wpedantic -Wunused-parameter)
+else()
+  add_compile_options(-Wunused-parameter)
+endif()
+
+## List all packges required
 find_package(ament_cmake REQUIRED)
 find_package(geometry_msgs REQUIRED)
 find_package(nav_msgs REQUIRED)
 find_package(rclcpp REQUIRED)
 
-set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 set(CONTROL_SOURCES
   src/algorithms/mpc.cpp
@@ -22,11 +30,9 @@ set(CONTROL_SOURCES
   src/interfaces/mobile_robot.cpp
   src/interfaces/robot_state.cpp
   src/robots/husky/husky_controller.cpp
-  src/robots/husky/husky_parameters.cpp
   src/utils/conversions.cpp
   src/utils/math.cpp
 )
-
 add_library(control_core ${CONTROL_SOURCES})
 ament_target_dependencies(control_core
   geometry_msgs
@@ -34,12 +40,12 @@ ament_target_dependencies(control_core
   rclcpp
 )
 target_include_directories(control_core PUBLIC
-  $<INSTALL_INTERFACE:include>
+  ${CMAKE_CURRENT_SOURCE_DIR}/include
 )
 
 add_executable(control_node src/main.cpp)
 target_link_libraries(control_node PRIVATE control_core)
-ament_target_dependencies(control_node rclcpp)
+ament_target_dependencies(control_node PUBLIC rclcpp)
 
 install(
   DIRECTORY include/
