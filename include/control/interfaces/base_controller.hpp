@@ -47,8 +47,8 @@ namespace control
     RobotState robot_state_{};
 
   private:
-    rclcpp::Subscription<nav_msgs::msg::Odometry>::SharedPtr odometry_subscription_;
-    rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr velocity_publisher_;
+    // rclcpp::Subscription<nav_msgs::msg::Odometry>::SharedPtr odometry_subscription_;
+    // rclcpp::Publisher<geometry_msgs::msg::Twist>::SharedPtr velocity_publisher_;
   };
 
 } // namespace control
