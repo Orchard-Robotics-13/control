@@ -6,12 +6,12 @@
 namespace control
 {
 
-BaseController::BaseController(
-  const std::string & node_name,
-  const std::string & odometry_topic,
-  const std::string & velocity_topic)
-: Node(node_name)
+BaseController::BaseController()
+: rclcpp::Node("Base_contrller")
 {
+  const std::string odometry_topic = "/odometry/filtered";
+  const std::string velocity_topic = "/cmd_vel";
+
   odometry_subscription_ = create_subscription<nav_msgs::msg::Odometry>(
     odometry_topic,
     rclcpp::SensorDataQoS(),
