@@ -22,16 +22,25 @@ find_package(rclcpp REQUIRED)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 set(CONTROL_SOURCES
+
+  ## control algos
   src/algorithms/mpc.cpp
   src/algorithms/pid.cpp
   src/algorithms/pure_pursuit.cpp
   src/algorithms/stanley.cpp
+
+  ## interface classes and controllers
   src/interfaces/base_controller.cpp
   src/interfaces/mobile_robot.cpp
   src/interfaces/robot_state.cpp
   src/robots/husky/husky_controller.cpp
+
+  ## misc conversion files
   src/utils/conversions.cpp
   src/utils/math.cpp
+
+  ## planner
+  # src/planner/planner.cpp
 )
 add_library(control_core ${CONTROL_SOURCES})
 ament_target_dependencies(control_core

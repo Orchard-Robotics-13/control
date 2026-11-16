@@ -59,7 +59,7 @@ namespace control::husky
     return command;
   }
 
-  // Publish desired velocity
+  // Publish desired velocity // runs on timer 500 ms atm
   void HuskyController::publishVelocity()
   {
     vel_ = 3.0 ; 

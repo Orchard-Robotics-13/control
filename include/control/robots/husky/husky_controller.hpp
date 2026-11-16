@@ -1,6 +1,5 @@
-#pragma once
-#ifndef HUSKY_CONTROLLER
-#define HUSKY_CONTROLLER
+#ifndef HUSKY_CONTROLLER_H
+#define HUSKY_CONTROLLER_H
 
 #include "control/interfaces/base_controller.hpp"
 

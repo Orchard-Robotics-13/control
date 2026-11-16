@@ -1,5 +1,5 @@
-#ifndef BASE_CONTROLLER
-#define BASE_CONTROLLER
+#ifndef BASE_CONTROLLER_H
+#define BASE_CONTROLLER_H
 
 // types
 #include <memory>
