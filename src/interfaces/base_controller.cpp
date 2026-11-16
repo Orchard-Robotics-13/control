@@ -9,23 +9,6 @@ namespace control
 BaseController::BaseController()
 : rclcpp::Node("Base_contrller")
 {
-  const std::string odometry_topic = "/odometry/filtered";
-  const std::string velocity_topic = "/cmd_vel";
-
-  // odometry_subscription_ = create_subscription<nav_msgs::msg::Odometry>(
-  //   odometry_topic,
-  //   rclcpp::SensorDataQoS(),
-  //   std::bind(&BaseController::odometry_callback, this, std::placeholders::_1));
-
-  // velocity_publisher_ = create_publisher<geometry_msgs::msg::Twist>(
-  //   velocity_topic,
-  //   rclcpp::QoS(rclcpp::KeepLast(10)));
-
-  // RCLCPP_INFO(
-  //   get_logger(),
-  //   "Husky controller listening on '%s' and publishing on '%s'",
-  //   odometry_topic.c_str(),
-  //   velocity_topic.c_str());
 }
 
 void BaseController::odometry_callback(const nav_msgs::msg::Odometry::SharedPtr message)

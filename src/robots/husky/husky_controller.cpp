@@ -15,7 +15,7 @@ namespace control::husky
         "a300_00000/platform/odom", 10, std::bind(&HuskyController::odomCallback, this, std::placeholders::_1));
 
     // timer
-    timer_ = this->create_wall_timer(std::chrono::milliseconds(100),
+    timer_ = this->create_wall_timer(std::chrono::milliseconds(500),
                                      std::bind(&HuskyController::publishVelocity, this));
   }
 
@@ -26,8 +26,17 @@ namespace control::husky
   // Callbacks
   void HuskyController::odomCallback(const nav_msgs::msg::Odometry &msg)
   {
-    std::lock_guard<std::mutex> lock(odoMtx_bar_);
-    odom_ = msg;
+    double odom_x_ = msg.pose.pose.position.x;
+
+    {
+      std::lock_guard<std::mutex> lock(odoMtx_bar_);
+      odom_ = msg;
+    }
+
+    RCLCPP_INFO(
+        this->get_logger(),
+        "ODOM Message with value: %f",
+        odom_x_);
   }
 
   void HuskyController::reset()
@@ -51,18 +60,24 @@ namespace control::husky
   }
 
   // Publish desired velocity
-void HuskyController::publishVelocity()
-{
+  void HuskyController::publishVelocity()
+  {
+    vel_ = 3.0 ; 
     geometry_msgs::msg::TwistStamped cmd;
 
     cmd.header.stamp = this->now();
     cmd.header.frame_id = "base_link";
 
     cmd.twist.linear.x = vel_;
-    cmd.twist.linear.y = 0.0 ;
+    cmd.twist.linear.y = 0.0;
     cmd.twist.angular.z = angular_vel_;
 
     pubCmdVel_->publish(cmd);
-}
+    RCLCPP_INFO(
+        this->get_logger(),
+        "Published to /a300_00000/cmd_vel: linear.x=%.3f, angular.z=%.3f",
+        cmd.twist.linear.x,
+        cmd.twist.angular.z);
+  }
 
 }
