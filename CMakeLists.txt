@@ -8,7 +8,8 @@ if(NOT CMAKE_CXX_STANDARD)
 endif()
 
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-  add_compile_options(-Wall -Wextra -Wpedantic -Wunused-parameter)
+  add_compile_options(-Wall -Wextra -Wpedantic   -Wconversion
+    -Wsign-conversion -Wshadow -Wformat=2 -Wunused-parameter)
 else()
   add_compile_options(-Wunused-parameter)
 endif()
